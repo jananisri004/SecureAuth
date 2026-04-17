@@ -1,0 +1,60 @@
+{% extends "EmailOTP/base.html" %}
+
+{% block title %}Sign In — SecureAuth{% endblock %}
+
+{% block content %}
+<div class="steps">
+    <div class="step active"></div>
+    <div class="step"></div>
+</div>
+
+<div class="security-badge">Encrypted & Secure</div>
+
+<h1 class="auth-heading">Welcome back</h1>
+<p class="auth-subheading">Enter your email address and we'll send you a one-time password to verify your identity.</p>
+
+{% if error %}
+<div class="alert alert-error">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            autofocus
+        >
+    </div>
+
+    <button type="submit" class="btn-primary">
+        Send OTP →
+    </button>
+</form>
+
+<div class="auth-footer">
+    A 6-digit code will be sent to your inbox.
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Button loading state
+    document.querySelector('form').addEventListener('submit', function() {
+        const btn = this.querySelector('.btn-primary');
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+        btn.style.opacity = '0.8';
+    });
+</script>
+{% endblock %}

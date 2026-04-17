@@ -1,0 +1,187 @@
+{% extends "EmailOTP/base.html" %}
+
+{% block title %}Verified — SecureAuth{% endblock %}
+
+{% block extra_styles %}
+.success-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, rgba(107, 203, 119, 0.2), rgba(107, 203, 119, 0.1));
+    border: 1px solid rgba(107, 203, 119, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    animation: successPop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes successPop {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.success-icon svg {
+    width: 34px;
+    height: 34px;
+    stroke: #6bcb77;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: drawCheck 0.5s ease 0.3s forwards;
+}
+
+@keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+}
+
+.success-title {
+    text-align: center;
+}
+
+.success-title .auth-heading {
+    text-align: center;
+}
+
+.success-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.email-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(107, 203, 119, 0.1);
+    border: 1px solid rgba(107, 203, 119, 0.2);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: #8debb5;
+    font-weight: 500;
+    margin: 12px auto 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.confetti-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+.session-info {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.session-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+}
+
+.session-row:not(:last-child) {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.session-row .key {
+    color: var(--text-muted);
+}
+
+.session-row .val {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.val.verified {
+    color: #6bcb77;
+    font-size: 12px;
+    background: rgba(107,203,119,0.1);
+    border-radius: 20px;
+    padding: 2px 10px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="success-icon">
+    <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"/>
+    </svg>
+</div>
+
+<div class="success-title">
+    <h1 class="auth-heading">Identity Verified</h1>
+</div>
+
+<div class="email-chip">
+    ✓ {{ email }}
+</div>
+
+<div class="session-info">
+    <div class="session-row">
+        <span class="key">Email</span>
+        <span class="val">{{ email }}</span>
+    </div>
+    <div class="session-row">
+        <span class="key">Status</span>
+        <span class="val verified">● Verified</span>
+    </div>
+    <div class="session-row">
+        <span class="key">Method</span>
+        <span class="val">Email OTP</span>
+    </div>
+</div>
+
+<p class="success-subtitle">You have successfully verified your identity. You may now access your account.</p>
+
+<a href="/" style="text-decoration:none;">
+    <button class="btn-primary" style="margin-top: 8px;">
+        Continue to Dashboard →
+    </button>
+</a>
+
+<div class="auth-footer" style="margin-top: 20px;">
+    <a href="/">Sign in with a different email</a>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Confetti animation
+    const colors = ['#e8c547', '#f0a500', '#6bcb77', '#7c83f5', '#ff9faa'];
+    for (let i = 0; i < 30; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'confetti-dot';
+        dot.style.cssText = `
+            left: ${Math.random() * 100}vw;
+            top: ${Math.random() * -50}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            width: ${4 + Math.random() * 8}px;
+            height: ${4 + Math.random() * 8}px;
+            animation-duration: ${2 + Math.random() * 3}s;
+            animation-delay: ${Math.random() * 1.5}s;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        `;
+        document.body.appendChild(dot);
+        dot.addEventListener('animationend', () => dot.remove());
+    }
+</script>
+{% endblock %}
